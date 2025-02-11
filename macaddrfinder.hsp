@@ -1,0 +1,15 @@
+#packopt name "getmacaddr"
+#include "hsp3cl.as"
+#uselib "Iphlpapi.dll"
+#func SendARP "SendARP" int,int,sptr,int
+ipaddrstr=dir_cmdline:repeat:if strmid(ipaddrstr,0,1)=" "{ipaddrstr=strmid(ipaddrstr,1,strlen(ipaddrstr))}else{break}:loop
+macaddrssize=1024
+sdim macaddrs,macaddrssize
+ipaddr=0:split ipaddrstr,".",ipaddrstrx
+poke ipaddr,0,int(ipaddrstrx(0))
+poke ipaddr,1,int(ipaddrstrx(1))
+poke ipaddr,2,int(ipaddrstrx(2))
+poke ipaddr,3,int(ipaddrstrx(3))
+SendARP ipaddr,0,varptr(macaddrs),varptr(macaddrssize)
+mes strf("%02X:%02X:%02X:%02X:%02X:%02X",peek(macaddrs,0),peek(macaddrs,1),peek(macaddrs,2),peek(macaddrs,3),peek(macaddrs,4),peek(macaddrs,5))
+end
